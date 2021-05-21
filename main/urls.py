@@ -15,8 +15,9 @@ Including another URLconf
 """
 from main.serializers import HistorySerializer
 from django.urls import path
-from .views import HistoryView
+from .views import HistorySpecificView, HistoryView
 
 urlpatterns = [
-    path('history/<int:id>/', HistoryView.as_view()),
+    path('history/', HistoryView.as_view()),
+    path('history/<int:id>/', HistorySpecificView.as_view()),
 ]
