@@ -89,7 +89,7 @@ def video_view(request):
             tf.keras.layers.Dense(1, kernel_initializer='glorot_normal', kernel_regularizer=tf.keras.regularizers.L2(0.001), activation='sigmoid'),
         ])
 
-        prediction_model.load_weights('test_model.h5')
+        prediction_model.load_weights('classify_weights_tf.h5')
 
         model = tf.keras.Sequential([
             feature_extractor,
