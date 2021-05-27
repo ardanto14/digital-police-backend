@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from rest_framework.views import APIView
-from .models import History
-from .serializers import HistorySerializer
+from .models import CCTV, History, City
+from .serializers import HistorySerializer, CitySerializer
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
 from rest_framework import status
@@ -16,11 +16,7 @@ import tensorflow as tf
 
 class HistorySpecificView(APIView):
 
-    # 1. List all
     def get(self, request, id, *args, **kwargs):
-        '''
-        List all the todo items for given requested user
-        '''
         try:
             history = History.objects.get(id=id)
         except History.DoesNotExist:
@@ -31,17 +27,42 @@ class HistorySpecificView(APIView):
 
 class HistoryView(APIView):
 
-    # 1. List all
     def get(self, request, *args, **kwargs):
-        '''
-        List all the todo items for given requested user
-        '''
+        histories = History.objects.all()
 
-        history = History.objects.all()
-
-        serializer = HistorySerializer(history, many=True)
+        serializer = HistorySerializer(histories, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class HistoryFilterByCity(APIView):
+    def get(self, request, city_id, *args, **kwargs):
+        city = City.objects.get(id=city_id)
+        cctvs = CCTV.objects.filter(city=city)
+        histories = History.objects.filter(cctv__in=cctvs)
+
+        serializer = HistorySerializer(histories, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class CityView(APIView):
+    def get(self, request, *args, **kwargs):
+        cities = City.objects.all()
+
+        serializer = CitySerializer(cities, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class CitySpecificView(APIView):
+    def get(self, request, id, *args, **kwargs):
+        city = City.objects.get(id=id)
+
+        serializer = CitySerializer(city)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 
 # TODO
@@ -54,7 +75,9 @@ class VideoView(APIView):
 
         devices.send_message(title="Title", body="Message")
 
-        return Response()   
+        return Response() 
+
+
 
 def video_view(request):
     if request.method == 'POST':
