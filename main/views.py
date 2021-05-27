@@ -1,10 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from rest_framework.views import APIView
 from .models import History
 from .serializers import HistorySerializer
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
 from rest_framework import status
+from fcm_django.models import FCMDevice
+import cv2
 
 class HistorySpecificView(APIView):
 
@@ -38,4 +40,22 @@ class HistoryView(APIView):
 
 # TODO
 class VideoView(APIView):
-    pass
+    def get(self, request, *args, **kwargs):
+        
+        devices = FCMDevice.objects.all()
+
+        print(devices)
+
+        devices.send_message(title="Title", body="Message")
+
+        return Response()
+
+def video_view(request):
+    if request.method == 'POST':
+        vid = request.POST['video']
+        cap = cv2.VideoCapture(vid)
+
+        print(type(vid))
+
+        return redirect('main')
+    return render(request, 'main/main.html')

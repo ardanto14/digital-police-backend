@@ -15,9 +15,11 @@ Including another URLconf
 """
 from main.serializers import HistorySerializer
 from django.urls import path
-from .views import HistorySpecificView, HistoryView
+from .views import HistorySpecificView, HistoryView, VideoView, video_view
 
 urlpatterns = [
+    path('', video_view, name='main'),
+    path('video/', VideoView.as_view()),
     path('history/', HistoryView.as_view()),
     path('history/<int:id>/', HistorySpecificView.as_view()),
 ]
