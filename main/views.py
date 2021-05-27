@@ -65,16 +65,6 @@ def video_view(request):
         f.close()
         cap = cv2.VideoCapture('output.mp4')
 
-        all_frame = []
-        while True:
-            ret, frame = cap.read()
-            if not ret:
-                break
-            all_frame.append(frame)
-        cap.release()
-
-        ln = len(all_frame)
-        
         base_model = C3D(weights='sports1M')
         feature_extractor = Model(inputs=base_model.input, outputs=base_model.get_layer('fc6').output)
 
@@ -97,25 +87,34 @@ def video_view(request):
             prediction_model
         ])
 
-        # Select 16 frames from video
-        start = 0
-        is_anomaly = False
+        ln = 0
+        all_frame = []
         while True:
-            if start + 16 > ln:
+            
+            ret, frame = cap.read()
+            if not ret:
                 break
+            all_frame.append(frame)
 
-            vid = np.array(all_frame[start:start+16])
-            start += 16
+            ln += 1
 
-            x = preprocess_input(vid)
+            if ln == 16:
+                x = preprocess_input(np.array(all_frame))
 
-            features = model.predict(x)
+                features = model.predict(x)
 
-            if features[0][0] > 0.5:
-                is_anomaly = True
-                break
-            print(features)
+                print(features)
 
+                if features[0][0] > 0.5:
+                    is_anomaly = True
+                    break
+            
+                all_frame = []
+                ln = 0
+
+                
+
+        cap.release()
 
         os.remove('output.mp4')
 
