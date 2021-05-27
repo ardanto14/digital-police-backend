@@ -86,33 +86,54 @@ def video_view(request):
             tf.keras.layers.Flatten(),
             prediction_model
         ])
-
+        batch_size = 32
         ln = 0
+        ln_btch = 0
+        all_batch = []
         all_frame = []
+        is_anomaly = False
         while True:
             
             ret, frame = cap.read()
             if not ret:
                 break
-            all_frame.append(frame)
 
+            all_frame.append(frame)
             ln += 1
 
             if ln == 16:
                 x = preprocess_input(np.array(all_frame))
+                x = np.squeeze(x)
+                
+                all_batch.append(x)
+                ln_btch += 1
 
-                features = model.predict(x)
+                if ln_btch == batch_size:
+                    prediction = model.predict(np.array(all_batch))
 
-                print(features)
+                    prediction = prediction > 0.5
 
-                if features[0][0] > 0.5:
-                    is_anomaly = True
-                    break
-            
+                    if prediction.any():
+                        is_anomaly = True
+
+                    all_batch = []
+                    ln_btch = 0
+                
+                
+                
                 all_frame = []
                 ln = 0
 
-                
+        if ln_btch > 0:
+            prediction = model.predict(np.array(all_batch))
+
+            prediction = prediction > 0.5
+
+            if prediction.any():
+                is_anomaly = True
+
+            all_batch = []
+            ln_btch = 0
 
         cap.release()
 
