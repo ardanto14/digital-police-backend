@@ -244,3 +244,7 @@ Thumbs.db
 # End of https://www.toptal.com/developers/gitignore/api/python,visualstudiocode,django
 
 .env
+output.mp4
+c3d_mean.npy
+sports1M_weights_tf.h5
+classify_weights_tf.h5

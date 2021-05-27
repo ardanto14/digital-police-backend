@@ -8,10 +8,11 @@
 </head>
 <body>
     <p>Upload</p>
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="file" name="video" accept="video/*">
         <button type="submit"> Upload New Video </button>
     </form>
+    <p>{{ is_anomaly }}</p>
 </body>
 </html>
