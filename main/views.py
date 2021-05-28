@@ -71,8 +71,6 @@ class VideoView(APIView):
         
         devices = FCMDevice.objects.all()
 
-        print(devices)
-
         devices.send_message(title="Title", body="Message")
 
         return Response() 
@@ -159,6 +157,19 @@ def video_view(request):
             ln_btch = 0
 
         cap.release()
+
+        if is_anomaly:
+
+
+            devices = FCMDevice.objects.all()
+            devices.send_message(title="Title", body="Message")
+
+            history = History()
+            history.anomaly_type = 'ANOMALY'
+            history.cctv = CCTV.objects.filter(name='dummy').first()
+            history.video_link = 'https://google.com/'
+
+            history.save()
 
         os.remove('output.mp4')
 
