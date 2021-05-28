@@ -160,16 +160,20 @@ def video_view(request):
 
         if is_anomaly:
 
-
-            devices = FCMDevice.objects.all()
-            devices.send_message(title="Title", body="Message")
-
             history = History()
             history.anomaly_type = 'ANOMALY'
             history.cctv = CCTV.objects.filter(name='dummy').first()
             history.video_link = 'https://google.com/'
 
             history.save()
+
+            print(history.id)
+
+
+            devices = FCMDevice.objects.all()
+            devices.send_message(title="ID for anomaly", body=str(history.id))
+
+            
 
         os.remove('output.mp4')
 
