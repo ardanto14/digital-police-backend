@@ -164,7 +164,34 @@ def video_view(request):
 
             history = History()
             history.anomaly_type = 'ANOMALY'
-            history.cctv = CCTV.objects.filter(name='dummy').first()
+            dummy_cctv = CCTV.objects.filter(name='dummy')
+            if not dummy_cctv:
+                cctv = CCTV()
+                cctv.name = 'dummy'
+                cctv.latitude = 0
+                cctv.longitude = 0
+
+                dummy_city = City.objects.filter(city_name='dummy')
+
+                if not dummy_city:
+                    city = City()
+                    city.city_name = 'dummy'
+                    city.save()
+
+                    dummy_city = city
+                else:
+                    dummy_city = dummy_city.first()
+
+                cctv.city = dummy_city
+                cctv.save()
+
+                dummy_cctv = cctv
+
+            else:
+                dummy_cctv = dummy_cctv.first()
+
+            history.cctv = dummy_cctv
+
             # history.video_link = 'https://google.com/'
 
             file_uuid = uuid.uuid1()

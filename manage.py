@@ -13,11 +13,11 @@ def main():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'digitalpolice.settings')
 
     cred = credentials.Certificate('credentials.json')
-    
+
     try:
         default_app = firebase_admin.initialize_app(cred, {
-        'storageBucket': 'bangkit-capstone-312901.appspot.com',
-    })
+            'storageBucket': os.environ.get('STORAGE_LINK'),
+        })
     except ValueError:
         default_app = firebase_admin.get_app()
 
