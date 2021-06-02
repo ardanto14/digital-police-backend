@@ -75,8 +75,16 @@ class TokenPostView(APIView):
 
         if not device:
             FCMDevice.objects.create(registration_id=body['token'], type='android', name=str(uuid.uuid1()))
+            created = True
+        else:
+            created = False
 
-        return Response()
+        if created:
+            statuss = 'created'
+        else:
+            statuss = 'not created'
+
+        return Response({"status": statuss}, status=status.HTTP_200_OK)
 
 
         
