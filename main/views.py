@@ -13,6 +13,8 @@ from tensorflow.keras import Model
 from .sports1M_utils import preprocess_input
 import numpy as np
 import tensorflow as tf
+from firebase_admin import storage
+import uuid
 
 class HistorySpecificView(APIView):
 
@@ -28,7 +30,7 @@ class HistorySpecificView(APIView):
 class HistoryView(APIView):
 
     def get(self, request, *args, **kwargs):
-        histories = History.objects.all()
+        histories = History.objects.all().order_by('-created_at')
 
         serializer = HistorySerializer(histories, many=True)
 
@@ -163,7 +165,15 @@ def video_view(request):
             history = History()
             history.anomaly_type = 'ANOMALY'
             history.cctv = CCTV.objects.filter(name='dummy').first()
-            history.video_link = 'https://google.com/'
+            # history.video_link = 'https://google.com/'
+
+            file_uuid = uuid.uuid1()
+
+            bucket = storage.bucket()
+            blob = bucket.blob(str(file_uuid) + '.mp4')
+            blob.upload_from_filename('output.mp4')
+
+            history.video_link = str(file_uuid) + '.mp4'
 
             history.save()
 

@@ -249,3 +249,4 @@ c3d_mean.npy
 sports1M_weights_tf.h5
 classify_weights_tf.h5
 data/
+credentials.json
