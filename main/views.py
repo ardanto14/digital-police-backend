@@ -15,6 +15,7 @@ import numpy as np
 import tensorflow as tf
 from firebase_admin import storage
 import uuid
+import json
 
 class HistorySpecificView(APIView):
 
@@ -64,6 +65,21 @@ class CitySpecificView(APIView):
         serializer = CitySerializer(city)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class TokenPostView(APIView):
+
+    def post(self, request, *args, **kwargs):
+        body = json.loads(request.body)
+        device = FCMDevice.objects.filter(registration_id=body['token'])
+
+        if not device:
+            FCMDevice.objects.create(registration_id=body['token'], type='android', name=str(uuid.uuid1()))
+
+        return Response()
+
+
+        
 
 
 

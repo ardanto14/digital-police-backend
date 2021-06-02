@@ -11,6 +11,9 @@ class CCTV(models.Model):
     longitude = models.IntegerField()
     city = models.ForeignKey(City, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.name
+
 class History(models.Model):
     cctv = models.ForeignKey(CCTV, on_delete=models.CASCADE)
     anomaly_type = models.CharField(max_length=255)
