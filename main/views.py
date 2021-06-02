@@ -200,7 +200,9 @@ def video_view(request):
             blob = bucket.blob(str(file_uuid) + '.mp4')
             blob.upload_from_filename('output.mp4')
 
-            history.video_link = str(file_uuid) + '.mp4'
+            blob.make_public()
+
+            history.video_link = blob.public_url
 
             history.save()
 
