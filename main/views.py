@@ -16,6 +16,7 @@ import tensorflow as tf
 from firebase_admin import storage
 import uuid
 import json
+import datetime
 
 class HistorySpecificView(APIView):
 
@@ -37,6 +38,15 @@ class HistoryView(APIView):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+class HistoryTodayView(APIView):
+
+    def get(self, request, *args, **kwargs):
+        today = datetime.date.today() 
+        histories = History.objects.filter(created_at__gt=today)
+
+        serializer = HistorySerializer(histories, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class HistoryFilterByCity(APIView):
     def get(self, request, city_id, *args, **kwargs):
@@ -219,14 +229,17 @@ def video_view(request):
             # history.video_link = 'https://google.com/'
 
             file_uuid = uuid.uuid1()
-
+            '''
             bucket = storage.bucket()
             blob = bucket.blob(str(file_uuid) + '.mp4')
+
             blob.upload_from_filename('output.mp4')
 
             blob.make_public()
 
             history.video_link = blob.public_url
+            '''
+            history.video_link = 'test.com'
 
             history.save()
 
@@ -234,7 +247,7 @@ def video_view(request):
 
 
             devices = FCMDevice.objects.all()
-            devices.send_message(title="ID for anomaly", body=str(history.id))
+            devices.send_message(title="Crime detected", body="Crime detected at CCTV {} in {} at {}".format(history.cctv.name, history.cctv.city.city_name, history.created_at), data={'historyId': history.id})
 
             
 
