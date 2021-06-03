@@ -17,6 +17,7 @@ from firebase_admin import storage
 import uuid
 import json
 import datetime
+from django.utils import timezone
 
 class HistorySpecificView(APIView):
 
@@ -241,16 +242,15 @@ def video_view(request):
             blob.make_public()
 
             history.video_link = blob.public_url
-            """
-            history.video_link = 'test.com'
 
-            history.save()
-            """
-            print(history.id)
+            # history.video_link = 'test.com'
+
+            # history.save()
 
 
+            print(timezone.localtime(history.created_at))
             devices = FCMDevice.objects.all()
-            devices.send_message(title="Crime detected", body="Crime detected at CCTV {} in {} at {}".format(history.cctv.name, history.cctv.city.city_name, history.created_at), data={'historyId': history.id})
+            devices.send_message(title="Crime detected", body="Crime detected at CCTV {} in {} at {}".format(history.cctv.name, history.cctv.city.city_name, timezone.localtime(history.created_at)), data={'historyId': history.id})
 
             
 
