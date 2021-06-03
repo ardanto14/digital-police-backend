@@ -29,6 +29,7 @@ class HistorySpecificView(APIView):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
 class HistoryView(APIView):
 
     def get(self, request, *args, **kwargs):
@@ -37,6 +38,7 @@ class HistoryView(APIView):
         serializer = HistorySerializer(histories, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class HistoryTodayView(APIView):
 
@@ -47,6 +49,7 @@ class HistoryTodayView(APIView):
         serializer = HistorySerializer(histories, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class HistoryFilterByCity(APIView):
     def get(self, request, city_id, *args, **kwargs):
@@ -229,7 +232,7 @@ def video_view(request):
             # history.video_link = 'https://google.com/'
 
             file_uuid = uuid.uuid1()
-            '''
+
             bucket = storage.bucket()
             blob = bucket.blob(str(file_uuid) + '.mp4')
 
@@ -238,11 +241,11 @@ def video_view(request):
             blob.make_public()
 
             history.video_link = blob.public_url
-            '''
+            """
             history.video_link = 'test.com'
 
             history.save()
-
+            """
             print(history.id)
 
 
