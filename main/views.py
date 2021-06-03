@@ -234,16 +234,16 @@ def video_view(request):
 
             file_uuid = uuid.uuid1()
 
-            # bucket = storage.bucket()
-            # blob = bucket.blob(str(file_uuid) + '.mp4')
+            bucket = storage.bucket()
+            blob = bucket.blob(str(file_uuid) + '.mp4')
 
-            # blob.upload_from_filename('output.mp4')
+            blob.upload_from_filename('output.mp4')
 
-            # blob.make_public()
+            blob.make_public()
 
-            # history.video_link = blob.public_url
+            history.video_link = blob.public_url
 
-            history.video_link = 'test.com'
+            # history.video_link = 'test.com'
 
             history.save()
 
