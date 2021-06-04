@@ -48,8 +48,9 @@ Admin page purpose is to manage all entity on the database. To know all the tabl
 
 ### EXTRA NOTE
 - CCTV Object would be automatically created if you predict the video via ```http://localhost:8000```. The name would be dummy, with latitude and longitude zero, with a city named dummy.
+- Predicting for the first time can take a long time because it needs to download the C3D weights and mean.
 
 
-##### Classifying weights link : [in_progress](about:blank)
+##### Classifying weights link : [Drive Link](https://drive.google.com/file/d/1Whn_Hj8xOxd1Fl5z6Jcbr7RMgZsuvW4B/view?usp=sharing)
 ##### API Documentation : [in_progress](about:blank)
 ##### Datbase Design Documentation : [in_progress](about:blank)
